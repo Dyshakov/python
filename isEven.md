@@ -23,7 +23,7 @@ def isEven(num):
 # Задание №2
 На языке Python или С++ написать минимум по 2 класса реализовывающих циклический буфер FIFO. Объяснить плюсы и минусы каждой реализации.
 
-## Решение
+## Первый способ
  
 ```python
 class CycleFIFO:
@@ -79,6 +79,46 @@ class CycleFIFO:
     def show_count(self):
         return 'Count of variables in FIFO: ' + str(self.count)
 ```
+
+Первый способ реализован с помощью указателей на элементы по индексу. Плюсом данного метода является удаление и добавление элемента за О(1), так как используются указатели на первый и последний элементы.
+
+## Второй способ
+
+```python
+class CycleFIFO:
+
+    def __init__(self, capacity=10):
+        self.capacity = capacity
+        self.count = 0
+        self.FIFO = list(range(0, capacity))
+
+    def __change_count(self):
+        if self.count < self.capacity:
+            self.count += 1
+        else:
+            pass
+
+    def add_value(self, value):
+        self.FIFO[-1] = value
+        self.__change_count()
+        self.FIFO.insert(0, self.FIFO.pop())
+
+    def get_front_value(self):
+        if self.count > 0:
+            temp = self.FIFO[self.count - 1]
+            return temp
+        else:
+            return 'FIFO is empty!'
+
+    def pop_front(self):
+        for i in range(self.count - 1):
+            self.FIFO.append(self.FIFO.pop())
+        self.count -= 1
+
+    def show_count(self):
+        return 'Count of variables in FIFO: ' + str(self.count)
+```
+Второй способ реализован с помощью циклического сдвига списка. Плюсом второй реализации является более понятный код, так как нет такого количества логических операций. Но минусом является использование встроенных методов.
 
 # Задание №3 
 На языке Python или С++ предложить алгоритм, который быстрее всего (по процессорным тикам) отсортирует данный ей массив чисел. Массив может быть любого размера со случайным порядком чисел (в том числе и отсортированным). Объяснить, почему вы считаете, что функция соответствует заданным критериям.
